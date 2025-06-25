@@ -8,6 +8,10 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { DevModeToggle } from "@/components/layout/DevModeToggle";
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
+import Appointments from "@/pages/Appointments";
+import Patients from "@/pages/Patients";
+import Professionals from "@/pages/Professionals";
+import Financial from "@/pages/Financial";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,10 +27,10 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/" element={<MainLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="appointments" element={<div className="p-6"><h1 className="text-2xl font-bold">Agendamentos</h1><p>Módulo em desenvolvimento...</p></div>} />
-            <Route path="patients" element={<div className="p-6"><h1 className="text-2xl font-bold">Pacientes</h1><p>Módulo em desenvolvimento...</p></div>} />
-            <Route path="professionals" element={<div className="p-6"><h1 className="text-2xl font-bold">Profissionais</h1><p>Módulo em desenvolvimento...</p></div>} />
-            <Route path="financial" element={<div className="p-6"><h1 className="text-2xl font-bold">Financeiro</h1><p>Módulo em desenvolvimento...</p></div>} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="patients" element={<Patients />} />
+            <Route path="professionals" element={<Professionals />} />
+            <Route path="financial" element={<Financial />} />
             <Route path="reports" element={<div className="p-6"><h1 className="text-2xl font-bold">Relatórios</h1><p>Módulo em desenvolvimento...</p></div>} />
             <Route path="events" element={<div className="p-6"><h1 className="text-2xl font-bold">Eventos</h1><p>Módulo em desenvolvimento...</p></div>} />
             <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Configurações</h1><p>Módulo em desenvolvimento...</p></div>} />
