@@ -3,41 +3,19 @@ import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
-import { supabase, getCurrentUser, getUserProfile } from '@/lib/supabase'
-import { Database } from '@/types/database'
+import { DeveloperModeIndicator } from './DeveloperModeIndicator'
 import { Skeleton } from '@/components/ui/skeleton'
 
-type UserProfile = Database['public']['Tables']['profiles']['Row']
-
 export function MainLayout() {
-  const [user, setUser] = useState<any>(null)
-  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [developerMode, setDeveloperMode] = useState(false)
 
   useEffect(() => {
-    loadUserData()
+    // Check if developer mode is active
+    const devMode = localStorage.getItem('developerMode') === 'true'
+    setDeveloperMode(devMode)
+    setLoading(false)
   }, [])
-
-  const loadUserData = async () => {
-    try {
-      const currentUser = await getCurrentUser()
-      if (currentUser) {
-        setUser(currentUser)
-        const userProfile = await getUserProfile(currentUser.id)
-        setProfile(userProfile)
-      }
-    } catch (error) {
-      console.error('Error loading user data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    setUser(null)
-    setProfile(null)
-  }
 
   if (loading) {
     return (
@@ -61,32 +39,31 @@ export function MainLayout() {
     )
   }
 
-  if (!user || !profile) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Acesso Negado</h1>
-          <p className="text-muted-foreground">Você precisa estar logado para acessar o sistema.</p>
-        </div>
-      </div>
-    )
+  // In developer mode, use mock user data
+  const mockUser = {
+    name: 'Desenvolvedor',
+    email: 'dev@neuroclinic.com',
+    role: 'admin',
+    avatar: undefined
+  }
+
+  const handleLogout = () => {
+    console.log('Logout em modo desenvolvedor')
   }
 
   return (
     <div className="flex h-screen w-full">
-      <Sidebar userRole={profile.role} />
+      <Sidebar userRole="admin" />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
-          user={{
-            name: profile.name,
-            email: profile.email,
-            role: profile.role,
-            avatar: profile.avatar_url
-          }}
+          user={mockUser}
           onLogout={handleLogout}
         />
         <main className="flex-1 overflow-auto p-6 bg-gray-50">
-          <Outlet />
+          <DeveloperModeIndicator isActive={developerMode} />
+          <div className={developerMode ? "mt-4" : ""}>
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
